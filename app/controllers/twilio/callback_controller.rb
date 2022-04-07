@@ -21,6 +21,7 @@ class Twilio::CallbackController < ApplicationController
       :FromCity,
       :To,
       :FromZip,
+      :ProfileName,
       :Body,
       :ToCountry,
       :FromState,

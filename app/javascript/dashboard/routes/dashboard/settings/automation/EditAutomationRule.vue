@@ -232,6 +232,10 @@ export default {
             action_name: 'assign_team',
             action_params: [],
           },
+          {
+            action_name: 'assign_best_agents',
+            action_params: [],
+          },
         ],
       },
       showDeleteConfirmationModal: false,
@@ -281,6 +285,10 @@ export default {
       this.automation.actions = [
         {
           action_name: 'assign_team',
+          action_params: [],
+        },
+        {
+          action_name: 'assign_best_agents',
           action_params: [],
         },
       ];
@@ -361,6 +369,8 @@ export default {
       switch (type) {
         case 'assign_team':
           return this.$store.getters['teams/getTeams'];
+        case 'assign_best_agents':
+          return this.$store.getters['agents/getAgents'];
         case 'add_label':
           return this.$store.getters['labels/getLabels'].map(i => {
             return {

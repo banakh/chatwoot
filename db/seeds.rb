@@ -12,26 +12,26 @@ end
 unless Rails.env.production?
 
   account = Account.create!(
-    name: 'Acme Inc'
-  )
-
-  secondary_account = Account.create!(
-    name: 'Acme Org'
+    name: 'SentioCX'
   )
 
   user = User.new(name: 'John', email: 'john@acme.inc', password: 'Password1!', type: 'SuperAdmin')
   user.skip_confirmation!
   user.save!
 
+  secondary_user = User.new(name: 'Test User', email: 'john@acme.inc', password: 'Password1!', type: 'SuperAdmin')
+  secondary_user.skip_confirmation!
+  secondary_user.save!
+
   AccountUser.create!(
     account_id: account.id,
     user_id: user.id,
     role: :administrator
   )
-
+  
   AccountUser.create!(
-    account_id: secondary_account.id,
-    user_id: user.id,
+    account_id: account.id,
+    user_id: secondary_user.id,
     role: :administrator
   )
 

@@ -72,6 +72,11 @@ export const AUTOMATIONS = {
         attributeI18nKey: 'ASSIGN_TEAM',
       },
       {
+        key: 'assign_best_agents',
+        name: 'Assign a agent',
+        attributeI18nKey: 'ASSIGN_AGENT',
+      },
+      {
         key: 'add_label',
         name: 'Add a label',
         attributeI18nKey: 'ADD_LABEL',
@@ -148,6 +153,11 @@ export const AUTOMATIONS = {
       {
         key: 'assign_agent',
         name: 'Assign an agent',
+        attributeI18nKey: 'ASSIGN_AGENT',
+      },
+      {
+        key: 'assign_best_agents',
+        name: 'Assign a agent',
         attributeI18nKey: 'ASSIGN_AGENT',
       },
       // {

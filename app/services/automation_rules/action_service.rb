@@ -67,7 +67,7 @@ class AutomationRules::ActionService
     @conversation.update!(team_id: team_ids[0])
   end
 
-  def assign_best_agent(agent_ids = [])
+  def assign_best_agents(agent_ids = [])
     return unless agent_belongs_to_account?(agent_ids)
 
     @agent = @account.users.find_by(id: agent_ids)
@@ -95,7 +95,7 @@ class AutomationRules::ActionService
   end
 
   def agent_belongs_to_account?(agent_ids)
-    @account.agents.pluck(:id).include?(agent_ids[0])
+    @account.users.pluck(:id).include?(agent_ids[0])
   end
 
   def team_belongs_to_account?(team_ids)
