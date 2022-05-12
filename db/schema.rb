@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_05_092033) do
+ActiveRecord::Schema.define(version: 2022_04_14_123513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -486,6 +486,14 @@ ActiveRecord::Schema.define(version: 2022_04_05_092033) do
     t.jsonb "settings", default: {}
   end
 
+  create_table "intent_classifiers", force: :cascade do |t|
+    t.string "phrase"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_intent_classifiers_on_user_id"
+  end
+
   create_table "kbase_articles", force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "portal_id", null: false
@@ -796,6 +804,7 @@ ActiveRecord::Schema.define(version: 2022_04_05_092033) do
   add_foreign_key "csat_survey_responses", "messages", on_delete: :cascade
   add_foreign_key "csat_survey_responses", "users", column: "assigned_agent_id", on_delete: :cascade
   add_foreign_key "data_imports", "accounts", on_delete: :cascade
+  add_foreign_key "intent_classifiers", "users"
   add_foreign_key "mentions", "conversations", on_delete: :cascade
   add_foreign_key "mentions", "users", on_delete: :cascade
   add_foreign_key "notes", "accounts", on_delete: :cascade

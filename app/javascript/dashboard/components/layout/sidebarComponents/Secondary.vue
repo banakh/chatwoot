@@ -13,6 +13,14 @@
         :menu-item="menuItem"
         @add-label="showAddLabelPopup"
       />
+      <li class="sidebar-item" :key="1231231">
+        <router-link
+          class="secondary-menu--title secondary-menu--link fs-small"
+          :to="intent"
+        >
+          Intent Classifier
+        </router-link>
+      </li>
     </transition-group>
   </div>
 </template>
@@ -57,6 +65,11 @@ export default {
     },
   },
   computed: {
+    intent() {
+      return frontendURL(
+        `accounts/${this.accountId}/settings/intent-classifier`
+      );
+    },
     hasSecondaryMenu() {
       return this.menuConfig.menuItems && this.menuConfig.menuItems.length;
     },

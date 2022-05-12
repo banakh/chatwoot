@@ -32,6 +32,7 @@ import userNotificationSettings from './modules/userNotificationSettings';
 import webhooks from './modules/webhooks';
 import attributes from './modules/attributes';
 import automations from './modules/automations';
+import intent from './modules/intent';
 import customViews from './modules/customViews';
 
 Vue.use(Vuex);
@@ -39,6 +40,7 @@ export default new Vuex.Store({
   modules: {
     accounts,
     agents,
+    intent,
     auth,
     campaigns,
     cannedResponse,

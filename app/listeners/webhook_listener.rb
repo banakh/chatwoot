@@ -43,7 +43,13 @@ class WebhookListener < BaseListener
   def message_created(event)
     message = extract_message_and_account(event)[0]
     inbox = message.inbox
-
+    IntentClassifier.all.each do |intent|
+      if message.content.include? intent.phrase
+        message.conversation.open!
+        message.conversation[:assignee_id] = intent.user_id
+        message.conversation.save!
+      end
+    end
     return unless message.webhook_sendable?
 
     payload = message.webhook_data.merge(event: __method__.to_s)
@@ -53,7 +59,6 @@ class WebhookListener < BaseListener
   def message_updated(event)
     message = extract_message_and_account(event)[0]
     inbox = message.inbox
-
     return unless message.webhook_sendable?
 
     payload = message.webhook_data.merge(event: __method__.to_s)
@@ -63,7 +68,7 @@ class WebhookListener < BaseListener
   def webwidget_triggered(event)
     contact_inbox = event.data[:contact_inbox]
     inbox = contact_inbox.inbox
-
+    puts '--------webwidget_triggered'
     payload = contact_inbox.webhook_data.merge(event: __method__.to_s)
     payload[:event_info] = event.data[:event_info]
     deliver_webhook_payloads(payload, inbox)

@@ -8,6 +8,7 @@ import integrationapps from './integrationapps/integrations.routes';
 import labels from './labels/labels.routes';
 import profile from './profile/profile.routes';
 import reports from './reports/reports.routes';
+import intentClassifier from './intentClassifier/agent.routes';
 import campaigns from './campaigns/campaigns.routes';
 import teams from './teams/teams.routes';
 import attributes from './attributes/attributes.routes';
@@ -31,6 +32,7 @@ export default {
     ...agent.routes,
     ...canned.routes,
     ...inbox.routes,
+    ...intentClassifier.routes,
     ...integrations.routes,
     ...labels.routes,
     ...profile.routes,
