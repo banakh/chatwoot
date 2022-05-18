@@ -1,68 +1,307 @@
 <template>
   <div class="column content-box">
-    <woot-button
-      color-scheme="success"
-      class-names="button--fixed-right-top"
-      icon="add-circle"
-      @click="openAddPopup()"
-    >
-      Add intent
-    </woot-button>
+    <h3>Mediaflows</h3>
 
-    <!-- List Agents -->
-    <div class="row">
-      <div class="small-8 columns with-right-space ">
-        <woot-loading-state
-          v-if="uiFlags.isFetching"
-          :message="$t('AGENT_MGMT.LOADING')"
-        />
-        <div v-else>
-          <p v-if="!intentList.length">
-            {{ intentList }}
-          </p>
-          <table v-else class="woot-table">
-            <tbody>
-              <tr v-for="(agent, index) in intentList" :key="agent.email">
-                <!-- Agent Name + Email -->
-                <td>
-                  <span class="agent-name">{{ agent.phrase }}</span>
-                </td>
-                <!-- Agent Role + Verification Status -->
-                <td>
-                  <span>{{ agent.agent }}</span>
-                </td>
-                <!-- Actions -->
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <!-- Add Agent -->
-    <woot-modal :show.sync="showAddPopup" :on-close="hideAddPopup">
-      <add-agent :on-close="hideAddPopup" />
-    </woot-modal>
-    <!-- Edit Agent -->
-    <woot-modal :show.sync="showEditPopup" :on-close="hideEditPopup">
-      <edit-agent
-        v-if="showEditPopup"
-        :id="currentAgent.id"
-        :name="currentAgent.name"
-        :type="currentAgent.role"
-        :email="currentAgent.email"
-        :on-close="hideEditPopup"
-      />
-    </woot-modal>
-    <!-- Delete Agent -->
-    <woot-delete-modal
-      :show.sync="showDeletePopup"
-      :on-close="closeDeletePopup"
-      :on-confirm="confirmDeletion"
-      :title="$t('AGENT_MGMT.DELETE.CONFIRM.TITLE')"
-      :message="deleteMessage"
-      :confirm-text="deleteConfirmText"
-      :reject-text="deleteRejectText"
-    />
+    <el-radio v-model="mediaType" label="all">All Mediaflows</el-radio>
+    <el-radio v-model="mediaType" label="by">By Mediaflow</el-radio>
+    <el-tabs v-if="mediaType === 'all'" v-model="activeName">
+      <el-tab-pane label="Prepopulated Intents" name="first">
+        <el-input
+          v-model="input"
+          class="search-intent"
+          placeholder="Search intent"
+          prefix-icon="el-icon-search"
+        ></el-input>
+        <el-checkbox-group
+          v-model="checkedCities"
+          @change="handleCheckedCitiesChange"
+        >
+          <el-checkbox v-for="city in cities" :key="city" :label="city">
+            {{ city }}
+          </el-checkbox>
+        </el-checkbox-group>
+      </el-tab-pane>
+      <el-tab-pane label="Manually added Intents" name="second">
+        <el-checkbox-group
+          v-model="checkedIntent"
+          @change="handleCheckedIntent"
+        >
+          <el-checkbox v-for="city in intent" :key="city" :label="city">
+            >
+            {{ city }}
+          </el-checkbox>
+        </el-checkbox-group>
+
+        <el-button
+          class="add-intent"
+          type="primary"
+          @click="dialogFormVisible = true"
+        >
+          Add intent
+        </el-button>
+
+        <el-dialog
+          width="30%"
+          title="Add intent"
+          :visible.sync="dialogFormVisible"
+        >
+          <el-form label-position="top" :model="form">
+            <el-form-item label="Name">
+              <el-input v-model="form.name" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="Utterance">
+              <el-select
+                v-model="utterancesValue"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="Add Utterance"
+              >
+                <el-option
+                  v-for="item in utterances"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="Desired action">
+              <el-input v-model="form.region" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-form label-position="left" :model="form">
+            <el-form-item label="Importance level" label-width="150px">
+              <el-input-number
+                v-model="num1"
+                label="Importance level"
+                controls-position="right"
+                :min="1"
+                :max="5"
+              ></el-input-number>
+            </el-form-item>
+            <el-form-item label="Urgency level" label-width="150px">
+              <el-input-number
+                v-model="num2"
+                label="Urgency level"
+                controls-position="right"
+                :min="1"
+                :max="5"
+              ></el-input-number>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="addIntent(form)"
+              >Confirm</el-button
+            >
+          </span>
+        </el-dialog>
+      </el-tab-pane>
+    </el-tabs>
+
+    <el-tabs v-else v-model="byMediaflow">
+      <el-tab-pane label="IT Products" name="first">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="Prepopulated Intents" name="first">
+            <el-input
+              v-model="input"
+              class="search-intent"
+              placeholder="Search intent"
+              prefix-icon="el-icon-search"
+            ></el-input>
+            <el-checkbox-group
+              v-model="checkedCities"
+              @change="handleCheckedCitiesChange"
+            >
+              <el-checkbox v-for="city in cities" :key="city" :label="city">
+                {{ city }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-tab-pane>
+          <el-tab-pane label="Manually added Intents" name="second">
+            <el-checkbox-group
+              v-model="checkedIntent"
+              @change="handleCheckedIntent"
+            >
+              <el-checkbox v-for="city in intent" :key="city" :label="city">
+                >
+                {{ city }}
+              </el-checkbox>
+            </el-checkbox-group>
+
+            <el-button
+              class="add-intent"
+              type="primary"
+              @click="dialogFormVisible = true"
+            >
+              Add intent
+            </el-button>
+
+            <el-dialog
+              width="30%"
+              title="Add intent"
+              :visible.sync="dialogFormVisible"
+            >
+              <el-form label-position="top" :model="form">
+                <el-form-item label="Name">
+                  <el-input v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="Utterance">
+                  <el-select
+                    v-model="utterancesValue"
+                    multiple
+                    filterable
+                    allow-create
+                    default-first-option
+                    placeholder="Add Utterance"
+                  >
+                    <el-option
+                      v-for="item in utterances"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+
+                <el-form-item label="Desired action">
+                  <el-input v-model="form.region" autocomplete="off"></el-input>
+                </el-form-item>
+              </el-form>
+              <el-form label-position="left" :model="form">
+                <el-form-item label="Importance level" label-width="150px">
+                  <el-input-number
+                    v-model="num1"
+                    label="Importance level"
+                    controls-position="right"
+                    :min="1"
+                    :max="5"
+                  ></el-input-number>
+                </el-form-item>
+                <el-form-item label="Urgency level" label-width="150px">
+                  <el-input-number
+                    v-model="num2"
+                    label="Urgency level"
+                    controls-position="right"
+                    :min="1"
+                    :max="5"
+                  ></el-input-number>
+                </el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="addIntent(form)"
+                  >Confirm</el-button
+                >
+              </span>
+            </el-dialog>
+          </el-tab-pane>
+        </el-tabs>
+      </el-tab-pane>
+      <el-tab-pane label="Logistics" name="second">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="Prepopulated Intents" name="first">
+            <el-input
+              v-model="input"
+              class="search-intent"
+              placeholder="Search intent"
+              prefix-icon="el-icon-search"
+            ></el-input>
+            <el-checkbox-group
+              v-model="checkedCities"
+              @change="handleCheckedCitiesChange"
+            >
+              <el-checkbox v-for="city in cities" :key="city" :label="city">
+                {{ city }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-tab-pane>
+          <el-tab-pane label="Manually added Intents" name="second">
+            <el-checkbox-group
+              v-model="checkedIntent"
+              @change="handleCheckedIntent"
+            >
+              <el-checkbox v-for="city in intent" :key="city" :label="city">
+                >
+                {{ city }}
+              </el-checkbox>
+            </el-checkbox-group>
+
+            <el-button
+              class="add-intent"
+              type="primary"
+              @click="dialogFormVisible = true"
+            >
+              Add intent
+            </el-button>
+
+            <el-dialog
+              width="30%"
+              title="Add intent"
+              :visible.sync="dialogFormVisible"
+            >
+              <el-form label-position="top" :model="form">
+                <el-form-item label="Name">
+                  <el-input v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="Utterance">
+                  <el-select
+                    v-model="utterancesValue"
+                    multiple
+                    filterable
+                    allow-create
+                    default-first-option
+                    placeholder="Add Utterance"
+                  >
+                    <el-option
+                      v-for="item in utterances"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+
+                <el-form-item label="Desired action">
+                  <el-input v-model="form.region" autocomplete="off"></el-input>
+                </el-form-item>
+              </el-form>
+              <el-form label-position="left" :model="form">
+                <el-form-item label="Importance level" label-width="150px">
+                  <el-input-number
+                    v-model="num1"
+                    label="Importance level"
+                    controls-position="right"
+                    :min="1"
+                    :max="5"
+                  ></el-input-number>
+                </el-form-item>
+                <el-form-item label="Urgency level" label-width="150px">
+                  <el-input-number
+                    v-model="num2"
+                    label="Urgency level"
+                    controls-position="right"
+                    :min="1"
+                    :max="5"
+                  ></el-input-number>
+                </el-form-item>
+              </el-form>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="addIntent(form)"
+                  >Confirm</el-button
+                >
+              </span>
+            </el-dialog>
+          </el-tab-pane>
+        </el-tabs>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
@@ -82,9 +321,44 @@ export default {
   data() {
     return {
       loading: {},
+      input: '',
+      mediaType: 'all',
+      byMediaflow: 'first',
+      checkedCities: ['I want to talk to someone', 'Not sure'],
+      cities: [
+        'I want to talk to someone',
+        'Not sure',
+        'Purchase',
+        'Unrecognized intent',
+      ],
+      intent: ['Increase subscription'],
+      checkedIntent: ['Increase subscription'],
       showAddPopup: false,
       showDeletePopup: false,
       showEditPopup: false,
+      activeName: 'first',
+      dialogFormVisible: false,
+      num1: 1,
+      num2: 1,
+      utterances: [
+        { value: 'utterance 1', label: 'utterance 1' },
+        {
+          value: 'utterance 2',
+          label: 'utterance 2',
+        },
+      ],
+      utterancesValue: [],
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: '',
+      },
+      formLabelWidth: '150px',
       agentAPI: {
         message: '',
       },
@@ -121,6 +395,18 @@ export default {
     showEditAction(agent) {
       return this.currentUserId !== agent.id;
     },
+    addIntent(form) {
+      this.intent.push(form.name);
+      this.checkedIntent.push(form.name);
+      this.dialogFormVisible = false;
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.cities.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.cities.length;
+    },
+    handleCheckedIntent(value) {},
     showDeleteAction(agent) {
       if (this.currentUserId === agent.id) {
         return false;
@@ -190,3 +476,60 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.el-checkbox-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.el-select {
+  .el-input {
+    margin-bottom: 0;
+  }
+
+  input {
+    margin: 0 !important;
+  }
+}
+
+.search-intent {
+  &.el-input {
+    margin-bottom: 20px;
+    width: 300px !important;
+
+    input {
+      margin: 0 !important;
+    }
+  }
+}
+
+.el-input-number {
+  .el-input {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  input {
+    margin: 0 !important;
+  }
+}
+
+.el-form {
+  .el-form {
+    width: 100% !important;
+  }
+}
+
+.el-button.add-intent {
+  margin-top: 20px;
+}
+
+.el-select {
+  width: 100%;
+}
+
+input[readonly] {
+  background-color: white !important;
+}
+</style>

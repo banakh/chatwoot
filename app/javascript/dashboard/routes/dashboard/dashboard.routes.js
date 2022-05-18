@@ -1,5 +1,6 @@
 import AppContainer from './Dashboard';
 import settings from './settings/settings.routes';
+import sentio from './sentio/sentio.routes';
 import conversation from './conversation/conversation.routes';
 import { routes as contactRoutes } from './contacts/routes';
 import { routes as notificationRoutes } from './notifications/routes';
@@ -13,6 +14,7 @@ export default {
       children: [
         ...conversation.routes,
         ...settings.routes,
+        ...sentio.routes,
         ...contactRoutes,
         ...notificationRoutes,
       ],

@@ -1,7 +1,20 @@
 <template>
   <li class="sidebar-item">
     <span v-if="hasSubMenu" class="secondary-menu--title fs-small">
+      <fluent-icon
+        v-if="menuItem.icon"
+        :icon="menuItem.icon"
+        class="secondary-menu--icon"
+        size="14"
+      />
       {{ $t(`SIDEBAR.${menuItem.label}`) }}
+      <fluent-icon
+        v-if="menuItem.icon"
+        icon="chevron-down"
+        style="margin-left: 20px"
+        class="secondary-menu--icon"
+        size="14"
+      />
     </span>
     <router-link
       v-else
@@ -131,7 +144,8 @@ export default {
   },
   methods: {
     computedInboxClass(child) {
-      const { type, phoneNumber } = child;
+      const { type, phoneNumber, simpleIcon, icon } = child;
+      if (simpleIcon) return icon;
       if (!type) return '';
       const classByType = getInboxClassByType(type, phoneNumber);
       return classByType;
@@ -160,6 +174,7 @@ export default {
 .secondary-menu--title {
   color: var(--s-600);
   display: flex;
+  align-items: center;
   font-weight: var(--font-weight-bold);
   line-height: var(--space-two);
   margin: var(--space-small) 0;
@@ -229,6 +244,7 @@ export default {
     color: var(--w-500);
   }
 }
+
 .beta {
   padding-right: var(--space-smaller) !important;
   padding-left: var(--space-smaller) !important;

@@ -62,6 +62,11 @@ export default {
       default: '',
     },
   },
+  methods: {
+    colo(i) {
+      console.log('---', i);
+    },
+  },
   computed: {
     showIcon() {
       return { 'text-truncate': this.shouldTruncate };
@@ -75,6 +80,10 @@ export default {
 <style lang="scss" scoped>
 $badge-size: var(--space-normal);
 $label-badge-size: var(--space-slab);
+
+.menu.nested {
+  margin-left: 2rem !important;
+}
 
 .button {
   margin: var(--space-small) 0;

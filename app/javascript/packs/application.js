@@ -43,6 +43,8 @@ import {
   initializeChatwootEvents,
 } from '../dashboard/helper/scriptHelpers';
 import FluentIcon from 'shared/components/FluentIcon/DashboardIcon';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.config.env = process.env;
 
@@ -60,6 +62,7 @@ if (window.analyticsConfig) {
   });
 }
 
+Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.use(VueI18n);
 Vue.use(WootUiKit);

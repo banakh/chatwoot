@@ -1,0 +1,42 @@
+<%= form_with(model: skill) do |form| %>
+  <% if skill.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(skill.errors.count, "error") %> prohibited this skill from being saved:</h2>
+
+      <ul>
+        <% skill.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :account_id %>
+    <%= form.text_field :account_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :skill %>
+    <%= form.text_field :skill %>
+  </div>
+
+  <div class="field">
+    <%= form.label :routing_weight %>
+    <%= form.number_field :routing_weight %>
+  </div>
+
+  <div class="field">
+    <%= form.label :threshold %>
+    <%= form.number_field :threshold %>
+  </div>
+
+  <div class="field">
+    <%= form.label :self_administered %>
+    <%= form.check_box :self_administered %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

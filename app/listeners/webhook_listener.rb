@@ -59,6 +59,13 @@ class WebhookListener < BaseListener
   def message_updated(event)
     message = extract_message_and_account(event)[0]
     inbox = message.inbox
+    IntentClassifier.where(app_id: nil,enabled: true ).each do |intent|
+      if intent.phrases.any? { |phrase| message.content.include? phrase}
+        message.conversation.open!
+        message.conversation[:assignee_id] = intent.user_id if intent.user_id
+        message.conversation.save!
+      end
+    end
     return unless message.webhook_sendable?
 
     payload = message.webhook_data.merge(event: __method__.to_s)

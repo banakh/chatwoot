@@ -7,7 +7,12 @@
       :class="{ 'is-active': isActive || isChildMenuActive }"
       @click="navigate"
     >
-      <fluent-icon :icon="icon" />
+      <fluent-icon :icon="icon" v-if="icon" />
+      <img
+        v-else
+        style="max-width: 80%;"
+        src="/brand-assets/sentio-short.png"
+      />
       <span class="show-for-sr">{{ name }}</span>
       <span v-if="count" class="badge warning">{{ count }}</span>
     </a>

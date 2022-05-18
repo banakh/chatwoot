@@ -1,6 +1,9 @@
 <template>
   <div v-if="hasSecondaryMenu" class="main-nav secondary-menu">
-    <account-context />
+    <div v-if="menuConfig.parentNav === 'sentio_manager'" class="account-context--group">
+      <img src="/brand-assets/sentio.png" />
+    </div>
+    <account-context v-else />
     <transition-group name="menu-list" tag="ul" class="menu vertical">
       <secondary-nav-item
         v-for="menuItem in accessibleMenuItems"
@@ -241,6 +244,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.account-context--group {
+  border-radius: var(--border-radius-normal);
+  border: 1px solid var(--color-border);
+  padding: var(--space-small);
+  margin-bottom: var(--space-small);
+}
+
 .secondary-menu {
   background: var(--white);
   border-right: 1px solid var(--s-50);

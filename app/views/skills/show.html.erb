@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Account:</strong>
+  <%= @skill.account_id %>
+</p>
+
+<p>
+  <strong>Skill:</strong>
+  <%= @skill.skill %>
+</p>
+
+<p>
+  <strong>Routing weight:</strong>
+  <%= @skill.routing_weight %>
+</p>
+
+<p>
+  <strong>Threshold:</strong>
+  <%= @skill.threshold %>
+</p>
+
+<p>
+  <strong>Self administered:</strong>
+  <%= @skill.self_administered %>
+</p>
+
+<%= link_to 'Edit', edit_skill_path(@skill) %> |
+<%= link_to 'Back', skills_path %>

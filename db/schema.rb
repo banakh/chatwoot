@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_14_123513) do
+ActiveRecord::Schema.define(version: 2022_05_18_171206) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -350,7 +350,7 @@ ActiveRecord::Schema.define(version: 2022_04_14_123513) do
     t.datetime "agent_last_seen_at"
     t.jsonb "additional_attributes", default: {}
     t.bigint "contact_inbox_id"
-    t.uuid "uuid", default: -> { "public.gen_random_uuid()" }, null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.string "identifier"
     t.datetime "last_activity_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.bigint "team_id"
@@ -494,6 +494,18 @@ ActiveRecord::Schema.define(version: 2022_04_14_123513) do
     t.index ["user_id"], name: "index_intent_classifiers_on_user_id"
   end
 
+  create_table "intent_classifiers", force: :cascade do |t|
+    t.string "phrase"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.string "app_id"
+    t.string "phrases", default: [], array: true
+    t.boolean "enabled", default: true
+    t.index ["user_id"], name: "index_intent_classifiers_on_user_id"
+  end
+
   create_table "kbase_articles", force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "portal_id", null: false
@@ -551,6 +563,17 @@ ActiveRecord::Schema.define(version: 2022_04_14_123513) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["account_id"], name: "index_labels_on_account_id"
     t.index ["title", "account_id"], name: "index_labels_on_title_and_account_id", unique: true
+  end
+
+  create_table "media_flows", force: :cascade do |t|
+    t.string "name"
+    t.string "phone_number"
+    t.integer "sla"
+    t.integer "tra"
+    t.bigint "account_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_media_flows_on_account_id"
   end
 
   create_table "mentions", force: :cascade do |t|
@@ -670,6 +693,17 @@ ActiveRecord::Schema.define(version: 2022_04_14_123513) do
     t.index ["inbox_id"], name: "index_reporting_events_on_inbox_id"
     t.index ["name"], name: "index_reporting_events_on_name"
     t.index ["user_id"], name: "index_reporting_events_on_user_id"
+  end
+
+  create_table "skills", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "skill"
+    t.integer "routing_weight"
+    t.integer "threshold"
+    t.boolean "self_administered"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_skills_on_account_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -805,11 +839,13 @@ ActiveRecord::Schema.define(version: 2022_04_14_123513) do
   add_foreign_key "csat_survey_responses", "users", column: "assigned_agent_id", on_delete: :cascade
   add_foreign_key "data_imports", "accounts", on_delete: :cascade
   add_foreign_key "intent_classifiers", "users"
+  add_foreign_key "media_flows", "accounts"
   add_foreign_key "mentions", "conversations", on_delete: :cascade
   add_foreign_key "mentions", "users", on_delete: :cascade
   add_foreign_key "notes", "accounts", on_delete: :cascade
   add_foreign_key "notes", "contacts", on_delete: :cascade
   add_foreign_key "notes", "users", on_delete: :cascade
+  add_foreign_key "skills", "accounts"
   add_foreign_key "team_members", "teams", on_delete: :cascade
   add_foreign_key "team_members", "users", on_delete: :cascade
   add_foreign_key "teams", "accounts", on_delete: :cascade

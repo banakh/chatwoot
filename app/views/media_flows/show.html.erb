@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @media_flow.name %>
+</p>
+
+<p>
+  <strong>Phone number:</strong>
+  <%= @media_flow.phone_number %>
+</p>
+
+<p>
+  <strong>Sla:</strong>
+  <%= @media_flow.sla %>
+</p>
+
+<p>
+  <strong>Tra:</strong>
+  <%= @media_flow.tra %>
+</p>
+
+<p>
+  <strong>Account:</strong>
+  <%= @media_flow.account_id %>
+</p>
+
+<%= link_to 'Edit', edit_media_flow_path(@media_flow) %> |
+<%= link_to 'Back', media_flows_path %>

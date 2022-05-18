@@ -38,6 +38,21 @@ class Integrations::Dialogflow::ProcessorService
   def get_dialogflow_response(session_id, message)
     Google::Cloud::Dialogflow.configure { |config| config.credentials = hook.settings['credentials'] }
     session_client = Google::Cloud::Dialogflow.sessions
+    intents_client = Google::Cloud::Dialogflow.intents
+    formatted_parent = intents_client.agent_path(project:hook.settings['project_id'])
+    request = {
+      parent: formatted_parent,
+    };
+    result = intents_client.list_intents request
+    result = result.response.to_h[:intents].select do |intent|
+      intent[:messages].any? do |message|
+        message.dig(:payload ,:fields,'action',:string_value) == 'handoff'
+      end
+    end
+    result.each do |intent|
+      IntentClassifier.find_or_initialize_by(name:intent[:display_name],app_id:'dialogflow',user_id:1).save!
+    end
+
     session = session_client.session_path project: hook.settings['project_id'], session: session_id
     query_input = { text: { text: message, language_code: 'en-US' } }
     session_client.detect_intent session: session, query_input: query_input

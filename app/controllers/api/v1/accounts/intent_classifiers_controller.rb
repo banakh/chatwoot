@@ -1,6 +1,6 @@
 class Api::V1::Accounts::IntentClassifiersController < Api::V1::Accounts::BaseController
   # before_action :check_authorization
-  before_action :fetch_intent_classifier, only: [:show, :update, :destroy, :clone]
+  before_action :fetch_intent_classifier, only: [:show, :update, :destroy]
 
   def index
     @intent_classifiers = IntentClassifier.all
@@ -26,7 +26,10 @@ class Api::V1::Accounts::IntentClassifiersController < Api::V1::Accounts::BaseCo
   def intent_classifier_permit
     params.permit(
       :user_id,
-      :phrase
+      :name,
+      :app_id,
+      :enabled,
+      :phrases => []
     )
   end
 

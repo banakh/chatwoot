@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Media Flows</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Phone number</th>
+      <th>Sla</th>
+      <th>Tra</th>
+      <th>Account</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @media_flows.each do |media_flow| %>
+      <tr>
+        <td><%= media_flow.name %></td>
+        <td><%= media_flow.phone_number %></td>
+        <td><%= media_flow.sla %></td>
+        <td><%= media_flow.tra %></td>
+        <td><%= media_flow.account_id %></td>
+        <td><%= link_to 'Show', media_flow %></td>
+        <td><%= link_to 'Edit', edit_media_flow_path(media_flow) %></td>
+        <td><%= link_to 'Destroy', media_flow, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Media Flow', new_media_flow_path %>

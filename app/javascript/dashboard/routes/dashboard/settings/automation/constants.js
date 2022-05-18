@@ -165,6 +165,11 @@ export const AUTOMATIONS = {
         name: 'Assign a agent',
         attributeI18nKey: 'ASSIGN_AGENT',
       },
+      {
+        key: 'assign_best_agents',
+        name: 'Assign a agent',
+        attributeI18nKey: 'ASSIGN_AGENT',
+      },
       // {
       //   key: 'send_email_to_team',
       //   name: 'Send an email to team',

@@ -30,7 +30,7 @@ const primaryMenuItems = accountId => [
     key: 'campaigns',
     label: 'CAMPAIGNS',
     toState: frontendURL(`accounts/${accountId}/campaigns`),
-    toStateName: 'settings_account_campaigns',
+    toStateName: 'agent_reports',
     roles: ['administrator'],
   },
   {
@@ -39,6 +39,15 @@ const primaryMenuItems = accountId => [
     label: 'SETTINGS',
     toState: frontendURL(`accounts/${accountId}/settings`),
     toStateName: 'settings_home',
+    roles: ['administrator', 'agent'],
+  },
+  {
+    key: 'sentio_manager',
+    label: 'SENTIO',
+    toState: frontendURL(
+      `accounts/${accountId}/sentio-manager/tenant-admin`
+    ),
+    toStateName: 'tenant_admin_index',
     roles: ['administrator', 'agent'],
   },
 ];
